@@ -8,11 +8,15 @@
  * calculates the total price based on the chosen items, and deals with invalid data entries.
  */
 
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.user;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import edu.bu.met.cs665.beverage.Beverage;
+import edu.bu.met.cs665.condiment.Condiment;
+import edu.bu.met.cs665.exception.InvalidDataException;
 
 public class UserInterface {
     private List<Beverage> beverages;

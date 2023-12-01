@@ -8,7 +8,7 @@
  * The class provides methods to retrieve the data type and invalid value.
  */
 
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.exception;
 
 public class InvalidDataException extends BaseInvalidDataException {
     private static final long serialVersionUID = 1L;

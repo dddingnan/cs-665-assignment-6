@@ -7,7 +7,9 @@
  * The class provides methods to retrieve the name and price of the condiment.
  */
 
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.condiment;
+
+import edu.bu.met.cs665.exception.InvalidDataException;
 
 public class Condiment {
     private String name;

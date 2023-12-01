@@ -7,7 +7,7 @@
  * Each method is loading data from a provided file and returning a list of corresponding objects.
  */
 
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.loader;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -15,6 +15,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.bu.met.cs665.beverage.Beverage;
+import edu.bu.met.cs665.condiment.Condiment;
+import edu.bu.met.cs665.exception.InvalidDataException;
 
 public class FileLoader {
 

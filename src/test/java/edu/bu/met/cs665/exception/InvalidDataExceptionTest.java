@@ -1,6 +1,7 @@
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.exception;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class InvalidDataExceptionTest {

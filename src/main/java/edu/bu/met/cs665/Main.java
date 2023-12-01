@@ -1,7 +1,7 @@
 /**
  * Name: Dingnan Hsu
  * Course: CS-665 Software Designs & Patterns
- * Date: 09/21/2023
+ * Date: 12/01/2023
  * File Name: Main.java
  * Description: Entry point for the "Automatic Beverage Vending Machine System". This class initializes the 
  * system by loading beverage and condiment data from files and then initiates the user interface to enable 
@@ -12,6 +12,12 @@ package edu.bu.met.cs665;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.bu.met.cs665.beverage.Beverage;
+import edu.bu.met.cs665.condiment.Condiment;
+import edu.bu.met.cs665.exception.InvalidDataException;
+import edu.bu.met.cs665.loader.FileLoader;
+import edu.bu.met.cs665.user.UserInterface;
 
 /**
  * This is the Main class.
@@ -31,9 +37,9 @@ public class Main {
     List<Condiment> sugar = new ArrayList<>();
     List<Condiment> milk = new ArrayList<>();
     FileLoader loader = new FileLoader();
-    beverages = loader.loadBeverageFile("src/data/beverage.csv");
-    sugar = loader.loadCondimentFile("src/data/sugar.csv");
-    milk = loader.loadCondimentFile("src/data/milk.csv");
+    beverages = loader.loadBeverageFile("src/main/resources/data/beverage.csv");
+    sugar = loader.loadCondimentFile("src/main/resources/data/sugar.csv");
+    milk = loader.loadCondimentFile("src/main/resources/data/milk.csv");
     UserInterface ui = new UserInterface(beverages, sugar, milk);
     ui.start();
   }

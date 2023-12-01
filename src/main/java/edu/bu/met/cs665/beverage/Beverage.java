@@ -7,7 +7,9 @@
  * The class provides methods to retrieve the name and price of the beverage.
  */
 
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.beverage;
+
+import edu.bu.met.cs665.exception.InvalidDataException;
 
 public class Beverage {
     private String name;
