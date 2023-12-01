@@ -16,16 +16,14 @@ import java.util.Scanner;
 
 import edu.bu.met.cs665.beverage.Beverage;
 import edu.bu.met.cs665.condiment.Condiment;
-import edu.bu.met.cs665.exception.InvalidDataException;
 
 public class UserInterface {
     private List<Beverage> beverages;
     private List<Condiment> sugar;
     private List<Condiment> milk;
     private Scanner scanner;
-    private Double total;
+    private double total;
 
-    // Fields to store selected items
     private Beverage selectedBeverage;
     private List<CondimentSelection> selectedSugar = new ArrayList<>();
     private List<CondimentSelection> selectedMilk = new ArrayList<>();
@@ -41,199 +39,167 @@ public class UserInterface {
         this.beverages = beverages;
         this.sugar = sugar;
         this.milk = milk;
-        this.total = 0.0;
         this.scanner = new Scanner(System.in);
     }
 
     /**
-     * Initiates the user interface, allowing users to select beverages and add
-     * condiments.
-     * Continues until the user chooses to exit.
-     * 
-     * @throws InterruptedException If the interaction is interrupted unexpectedly.
+     * Starts the user interaction process for selecting beverages and condiments.
+     * Continues until the user chooses not to make another order.
      */
-    public void start() throws InterruptedException {
-        while (true) {
-            System.out.println("Please select your beverage:");
-            for (int i = 0; i < beverages.size(); i++) {
-                System.out.println((i + 1) + ". " + beverages.get(i).getName() + " - $" + beverages.get(i).getPrice());
-            }
-
-            int beverageIndex = -1;
-            while (beverageIndex < 0 || beverageIndex >= beverages.size()) {
-                System.out.print("Enter a number between 1 and " + beverages.size() + ": ");
-                try {
-                    String input = scanner.next();
-                    if (!input.matches("\\d+")) {
-                        throw new InvalidDataException("Invalid data input. Please enter a valid number.",
-                                "UserInterface - Beverage - Not integer", input);
-                    }
-
-                    beverageIndex = Integer.parseInt(input) - 1;
-
-                    if (beverageIndex < 0 || beverageIndex >= beverages.size()) {
-                        throw new InvalidDataException(
-                                "Invalid input range. Please enter a number between 1 and " + beverages.size(),
-                                "UserInterface - Not within the valid range", input);
-                    }
-                } catch (InvalidDataException e) {
-                    System.out.println(e.getMessage());
-                    scanner.nextLine(); // Discard the invalid input
-                    beverageIndex = -1; // Reset the index, forcing the loop to repeat
-                    continue;
+    public void start() {
+        try {
+            do {
+                displayBeverageOptions();
+                selectBeverage();
+                if (askForCondiments("sugar")) {
+                    selectCondiments(sugar, selectedSugar);
                 }
-            }
-            selectedBeverage = beverages.get(beverageIndex);
-            this.total = selectedBeverage.getPrice(); // Set the total to the beverage price
-
-            // Handle sugar choice
-            String sugarChoice = getUserChoice("Do you want to add sugar? (Y/N)");
-            if (sugarChoice.equalsIgnoreCase("Y")) {
-                // Display sugar options and add sugar price to the total
-                handleCondimentOptions(sugar, "Sugar", selectedSugar);
-            }
-
-            // Handle milk choice
-            String milkChoice = getUserChoice("Do you want to add milk? (Y/N)");
-            if (milkChoice.equalsIgnoreCase("Y")) {
-                // Display milk options and add milk price to the total
-                handleCondimentOptions(milk, "Milk", selectedMilk);
-            }
-
-            // Display the selected items and total
-            System.out.println("--------------------------------------------------------");
-            System.out.println("Selected Beverage:");
-            System.out.println("  - Type: " + selectedBeverage.getName() + " - Price: $" + selectedBeverage.getPrice());
-
-            // Display selected sugar items
-            System.out.println("Selected Sugar:");
-            for (CondimentSelection selection : selectedSugar) {
-                System.out.println("  - Type: " + selection.condiment.getName() + ", Units: " + selection.units
-                        + " - Price: $" + (selection.condiment.getPrice() * selection.units));
-                this.total += selection.condiment.getPrice() * selection.units;
-            }
-
-            // Display selected milk items
-            System.out.println("Selected Milk:");
-            for (CondimentSelection selection : selectedMilk) {
-                System.out.println("  - Type: " + selection.condiment.getName() + ", Units: " + selection.units
-                        + " - Price: $" + (selection.condiment.getPrice() * selection.units));
-                this.total += selection.condiment.getPrice() * selection.units;
-            }
-            System.out.println("--------------------------------------------------------");
-            System.out.println("Total Price: $" + this.total);
-            System.out.println("--------------------------------------------------------");
-
-            // Ask for another calculation
-            String anotherCalculationChoice = getUserChoice("Do you want to make another calculation? (Y/N)");
-            if (anotherCalculationChoice.equalsIgnoreCase("N")) {
-                System.out.println("See you next time~!");
-                scanner.close();
-                return; // Exit the method or loop
-            } else if (anotherCalculationChoice.equalsIgnoreCase("Y")) {
-                selectedBeverage = null;
-                selectedSugar.clear();
-                selectedMilk.clear();
-            }
+                if (askForCondiments("milk")) {
+                    selectCondiments(milk, selectedMilk);
+                }
+                displayOrderSummary();
+                resetOrder();
+            } while (askToContinue());
+        } finally {
+            scanner.close();
         }
     }
 
     /**
-     * Retrieves a valid user choice (either 'Y' or 'N') with a custom prompt
-     * message.
-     * 
-     * @param message The prompt message to display.
-     * @return A string representing the user's choice ('Y' or 'N').
+     * Displays the available beverage options to the user.
      */
-    private String getUserChoice(String message) {
-        String choice = "";
-        while (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N")) {
-            System.out.println(message);
-            choice = scanner.next();
-            if (!choice.equalsIgnoreCase("Y") && !choice.equalsIgnoreCase("N")) {
-                System.out.println("Invalid input. Please enter 'Y' or 'N'.");
-            }
+    private void displayBeverageOptions() {
+        System.out.println("Please select your beverage:");
+        for (int i = 0; i < beverages.size(); i++) {
+            Beverage beverage = beverages.get(i);
+            System.out.println((i + 1) + ". " + beverage.getName() + " - $" + beverage.getPrice());
         }
-        return choice;
     }
 
     /**
-     * Handles the selection process for condiments, displaying the available
-     * options
-     * and prompting the user to choose and specify the desired quantity.
-     * 
-     * @param condiments    A list of available condiments of a specific type
-     *                      (sugar/milk).
-     * @param condimentType A string indicating the type of condiment being
-     *                      processed (e.g., "Sugar" or "Milk").
-     * @param selections    A list to store the user's condiment selections.
+     * Handles the user's beverage selection.
+     * Validates the input and sets the selected beverage and initial total price.
      */
-    private void handleCondimentOptions(List<Condiment> condiments, String condimentType,
-            List<CondimentSelection> selections) {
-        System.out.println(condimentType + " options:");
+    private void selectBeverage() {
+        int choice = getValidatedInput("Enter a number for the beverage: ", beverages.size());
+        selectedBeverage = beverages.get(choice - 1);
+        total = selectedBeverage.getPrice();
+    }
+
+    /**
+     * Asks the user if they would like to add a type of condiment.
+     * 
+     * @param type The type of condiment to ask about (e.g., "sugar" or "milk").
+     * @return True if the user wants to add the condiment, false otherwise.
+     */
+    private boolean askForCondiments(String type) {
+        System.out.print("Do you want to add " + type + "? (Y/N): ");
+        return scanner.next().equalsIgnoreCase("Y");
+    }
+
+    /**
+     * Handles the process of selecting condiments and their quantities.
+     * 
+     * @param condiments The list of available condiments of a specific type.
+     * @param selections The list to store the user's condiment selections.
+     */
+    private void selectCondiments(List<Condiment> condiments, List<CondimentSelection> selections) {
+        displayCondimentOptions(condiments);
+        int choiceIndex = getValidatedInput("Enter a number for the condiment: ", condiments.size()) - 1;
+        Condiment selectedCondiment = condiments.get(choiceIndex);
+        int units = getValidatedInput("Enter the number of units for " + selectedCondiment.getName() + " (1-3): ", 3);
+        selections.add(new CondimentSelection(selectedCondiment, units));
+    }
+
+    /**
+     * Displays the available options for a specific type of condiment.
+     * 
+     * @param condiments The list of condiments to display.
+     */
+    private void displayCondimentOptions(List<Condiment> condiments) {
+        System.out.println("Available options:");
         for (int i = 0; i < condiments.size(); i++) {
-            System.out.println((i + 1) + ". " + condiments.get(i).getName() + " - $" + condiments.get(i).getPrice());
+            Condiment condiment = condiments.get(i);
+            System.out.println((i + 1) + ". " + condiment.getName() + " - $" + condiment.getPrice());
         }
+    }
 
-        // Prompt for a valid condiment choice
-        int condimentIndex = -1;
-        while (condimentIndex < 1 || condimentIndex > condiments.size()) {
-            System.out.print("Enter a number between 1 and " + condiments.size() + ": ");
-            try {
-                String input = scanner.next();
-                if (!input.matches("\\d+")) {
-                    throw new InvalidDataException("Invalid data input. Please enter a valid number.",
-                            "UserInterface - Condiment - " + condimentType + " - Units - Not integer", input);
-                }
-
-                condimentIndex = Integer.parseInt(input);
-
-                if (condimentIndex < 1 || condimentIndex > condiments.size()) {
-                    throw new InvalidDataException(
-                            "Invalid input range. Please enter a number between 1 and " + condiments.size(),
-                            "UserInterface - Condiment - " + condimentType + " - Units - Not within the valid range",
-                            input);
-                }
-            } catch (InvalidDataException e) {
-                System.out.println(e.getMessage());
-                scanner.nextLine(); // Discard the invalid input
-                condimentIndex = -1; // Reset the index, forcing the loop to repeat
+    /**
+     * Prompts the user for input and validates it against the expected range.
+     * 
+     * @param prompt The prompt to display to the user.
+     * @param max    The maximum valid input value.
+     * @return The validated input from the user.
+     */
+    private int getValidatedInput(String prompt, int max) {
+        int input = 0;
+        do {
+            System.out.print(prompt);
+            while (!scanner.hasNextInt()) {
+                System.out.println("That's not a number. Please enter a number.");
+                scanner.next(); // to discard the non-int input
             }
-        }
+            input = scanner.nextInt();
+            if (input < 1 || input > max) {
+                System.out.println("Please enter a number between 1 and " + max + ".");
+            }
+        } while (input < 1 || input > max);
+        return input;
+    }
 
-        // Prompt for units of condiment (1-3)
-        int selectedUnits = -1;
-        while (selectedUnits < 1 || selectedUnits > 3) {
-            System.out
-                    .print("Enter the number of units of " + condiments.get(condimentIndex - 1).getName() + " (1-3): ");
-            try {
-                String input = scanner.next();
-                if (!input.matches("\\d+")) {
-                    throw new InvalidDataException("Invalid data input. Please enter a valid number.",
-                            "UserInterface - Condiment - " + condimentType + " - Units - Not integer", input);
-                }
+    /**
+     * Displays a summary of the selected order, including beverage and condiments,
+     * and the total price.
+     */
+    private void displayOrderSummary() {
+        System.out.println("--------------------------------------------------------");
+        System.out.println("Selected Beverage: " + selectedBeverage.getName() + " - $" + selectedBeverage.getPrice());
+        displayCondimentSummary("Sugar", selectedSugar);
+        displayCondimentSummary("Milk", selectedMilk);
+        System.out.println("Total Price: $" + total);
+        System.out.println("--------------------------------------------------------");
+    }
 
-                selectedUnits = Integer.parseInt(input);
-
-                if (selectedUnits < 1 || selectedUnits > 3) {
-                    System.out.println(
-                            "Invalid number of units selected for " + condiments.get(condimentIndex - 1).getName()
-                                    + ". Please enter a number between 1 and 3.");
-                } else {
-                    // Add the selection to the list
-                    selections.add(new CondimentSelection(condiments.get(condimentIndex - 1), selectedUnits));
-                }
-            } catch (InvalidDataException e) {
-                System.out.println(e.getMessage());
-                scanner.nextLine(); // Discard the invalid input
-                selectedUnits = -1; // Reset the units, forcing the loop to repeat
+    /**
+     * Displays a summary of the selected condiments and their quantities.
+     * 
+     * @param type       The type of condiment (e.g., "Sugar").
+     * @param selections The list of condiment selections made by the user.
+     */
+    private void displayCondimentSummary(String type, List<CondimentSelection> selections) {
+        if (!selections.isEmpty()) {
+            System.out.println("Selected " + type + ":");
+            for (CondimentSelection selection : selections) {
+                Condiment condiment = selection.condiment;
+                System.out.println("  - " + condiment.getName() + ", Units: " + selection.units
+                        + " - Price: $" + (condiment.getPrice() * selection.units));
+                total += condiment.getPrice() * selection.units;
             }
         }
     }
 
     /**
-     * Represents a selection made by the user, containing the chosen condiment
-     * and the specified quantity.
+     * Resets the order details to prepare for a new order.
+     */
+    private void resetOrder() {
+        selectedBeverage = null;
+        selectedSugar.clear();
+        selectedMilk.clear();
+        total = 0;
+    }
+
+    /**
+     * Asks the user if they want to make another order.
+     * 
+     * @return True if the user wants to continue, false if they want to exit.
+     */
+    private boolean askToContinue() {
+        System.out.print("Do you want to make another order? (Y/N): ");
+        return scanner.next().equalsIgnoreCase("Y");
+    }
+
+    /**
+     * Represents a selection of a condiment and its quantity made by the user.
      */
     private static class CondimentSelection {
         private Condiment condiment;

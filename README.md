@@ -67,6 +67,28 @@ Enhance File Path Handling: Use Path and Files.newBufferedReader instead of File
 
 ---
 
+- 3.
+
+Refactoring the UserInterface class should improve its structure, readability, and maintainability, as well as potentially simplify the control flow. Here are some suggestions:
+
+Encapsulate Scanner: The Scanner is a resource that should be managed properly. You could encapsulate its usage in a method that also handles closing it when done.
+
+Refactor Large Methods: The start() method is quite lengthy and handles multiple responsibilities. Breaking it down into smaller methods would improve readability and maintainability.
+
+Simplify Validation: The input validation logic is repeated multiple times. This could be extracted into separate methods to reduce duplication.
+
+Use Enums for Choices: Instead of using strings for user choices, consider using an enum type for clarity and to avoid typos.
+
+Improve Exception Handling: Throwing exceptions for user input errors might be overkill and can be replaced with simpler control flow logic.
+
+Externalize User Interaction: Consider creating separate methods or classes for user interactions to make the UserInterface class more focused on processing those interactions rather than handling them directly.
+
+Refactor Total Price Calculation: The current approach calculates and adds prices in multiple places. Centralize this to ensure consistency and reduce errors.
+
+Improve Loop Control: The while (true) loop makes it hard to understand the termination condition. Refactoring this to a more explicit control structure could improve understanding.
+
+---
+
 ### `Answer`
 
 1. `Flexibility`
