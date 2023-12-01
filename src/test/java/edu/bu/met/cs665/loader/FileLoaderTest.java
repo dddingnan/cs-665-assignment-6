@@ -25,7 +25,7 @@ public class FileLoaderTest {
     @Test
     public void testLoadBeverageFileSuccess() throws FileNotFoundException, InvalidDataException, IOException {
         // Provide a path to a known existing file for this test
-        String filePath = "src/data/beverage.csv";
+        String filePath = "src/main/resources/data/beverage.csv";
 
         List<Beverage> beverages = fileLoader.loadBeverageFile(filePath);
 
@@ -38,7 +38,7 @@ public class FileLoaderTest {
     public void testLoadBeverageFileFailure() throws FileNotFoundException,
             InvalidDataException, IOException {
         // Provide a path to a non-existing file for this test
-        String filePath = "src/data/abc.csv";
+        String filePath = "src/main/resources/data/abc.csv";
 
         List<Beverage> beverages = fileLoader.loadBeverageFile(filePath);
 
@@ -49,7 +49,7 @@ public class FileLoaderTest {
     @Test
     public void testLoadCondimentFileSuccess() throws FileNotFoundException, InvalidDataException, IOException {
         // Provide a path to a known existing file for this test
-        String filePath = "src/data/sugar.csv";
+        String filePath = "src/main/resources/data/sugar.csv";
 
         List<Condiment> sugar = fileLoader.loadCondimentFile(filePath);
 
@@ -62,7 +62,7 @@ public class FileLoaderTest {
     public void testLoadCondimentFileFailure() throws FileNotFoundException,
             InvalidDataException, IOException {
         // Provide a path to a non-existing file for this test
-        String filePath = "src/data/abc.csv";
+        String filePath = "src/main/resources/data/abc.csv";
 
         List<Condiment> condiments = fileLoader.loadCondimentFile(filePath);
 
