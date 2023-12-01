@@ -6,7 +6,7 @@
  * Description: A custom exception class designed to handle invalid data scenarios.
  */
 
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.exception;
 
 public class BaseInvalidDataException extends Exception {
     private static final long serialVersionUID = 1L;

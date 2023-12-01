@@ -1,49 +1,319 @@
 | CS-665       | Software Design & Patterns |
 | ------------ | -------------------------- |
 | Name         | Dingnan Hsu                |
-| Date         | 09/21/2023                 |
+| Date         | 12/01/2023                 |
 | Course       | 2023 Fall                  |
-| Assignment # | 1                          |
+| Assignment # | 6                          |
 
 # Assignment Overview
 
 The system starts with a user welcome and loads beverage and condiment data from CSV files, handling errors. Users interact with the vending machine through an intuitive interface.
 
+For this time assignment, address at least 3 areas of code improvement.
+
 # GitHub Repository Link:
 
-https://github.com/dddingnan/cs-665-assignment-1
+- Assignment-6 URL:
+  - https://github.com/dddingnan/cs-665-assignment-6
+- Refactor based on the assignment-1 URL:
+  - https://github.com/dddingnan/cs-665-assignment-1
 
-# Implementation Description
+## Task
 
-For each assignment, please answer the following:
+### Examine your code and identify opportunities for code improvement
 
-- Explain the level of flexibility in your implementation, including how new object types can
-  be easily added or removed in the future.
-- Discuss the simplicity and understandability of your implementation, ensuring that it is
-  easy for others to read and maintain.
-- Describe how you have avoided duplicated code and why it is important.
-- If applicable, mention any design patterns you have used and explain why they were
-  chosen.
+- `Main.java`
+
+  - The Specific Opportunities
+
+    - `Method Extraction`: Extracting `loadBeverages and loadCondiments` methods from main.
+    - `Use of Constants`: Defining file paths as constants (`BEVERAGE_FILE_PATH, SUGAR_FILE_PATH, MILK_FILE_PATH`).
+    - `Enhanced Readability`: Separating the vending machine startup process into `startVendingMachine`.
+
+  - The Reasons
+
+    - `Method Extraction`: Adhering to the `Single Responsibility Principle`. Each method now focuses on a specific task, making the code more modular.
+    - `Use of Constants`: Reducing the likelihood of errors or missed updates.
+    - `Enhanced Readability`: This separation makes it easier to understand the flow and potentially update the startup process in the future.
+
+  - The Chagnes
+
+    - Before refactor:
+
+      ```
+      public class Main {
+         public static void main(String[] args) throws InvalidDataException, InterruptedException {
+            System.out.println("Hello! Welcome to the Automatic Beverage Vending Machine System!");
+            System.out.println("--------------------------------------------------------");
+            List<Beverage> beverages = new ArrayList<>();
+            List<Condiment> sugar = new ArrayList<>();
+            List<Condiment> milk = new ArrayList<>();
+            FileLoader loader = new FileLoader();
+            beverages = loader.loadBeverageFile("src/data/beverage.csv");
+            sugar = loader.loadCondimentFile("src/data/sugar.csv");
+            milk = loader.loadCondimentFile("src/data/milk.csv");
+            UserInterface ui = new UserInterface(beverages, sugar, milk);
+            ui.start();
+         }
+      }
+      ```
+
+    - After refactor:
+
+      ```
+      public class Main {
+         private static final String BEVERAGE_FILE_PATH = "src/main/resources/data/beverage.csv";
+         private static final String SUGAR_FILE_PATH = "src/main/resources/data/sugar.csv";
+         private static final String MILK_FILE_PATH = "src/main/resources/data/milk.csv";
+
+         public static void main(String[] args) {
+            try {
+               System.out.println("Initializing the Vending Machine...");
+               startVendingMachine();
+            } catch (Exception e) {
+               System.err.println("Error initializing the Vending Machine: " + e.getMessage());
+               e.printStackTrace();
+            }
+         }
+
+         private static void startVendingMachine() throws InterruptedException, InvalidDataException {
+            FileLoader loader = new FileLoader();
+
+            List<Beverage> beverages = loadBeverages(loader);
+            List<Condiment> sugars = loadCondiments(loader, SUGAR_FILE_PATH);
+            List<Condiment> milks = loadCondiments(loader, MILK_FILE_PATH);
+
+            UserInterface ui = new UserInterface(beverages, sugars, milks);
+            ui.start();
+         }
+
+         private static List<Beverage> loadBeverages(FileLoader loader) throws InvalidDataException {
+            System.out.println("Loading beverages...");
+            return loader.loadBeverageFile(BEVERAGE_FILE_PATH);
+         }
+
+         private static List<Condiment> loadCondiments(FileLoader loader, String filePath) throws InvalidDataException {
+            System.out.println("Loading condiments from " + filePath + "...");
+            return loader.loadCondimentFile(filePath);
+         }
+      }
+      ```
+
+- `UserInterface.java`
+
+  - The Specific Opportunities
+
+    - `Method Extraction and Refinement`: Breaking down the `start()` method into smaller, focused methods (`displayBeverageOptions, selectBeverage, askForCondiments, selectCondiments, displayOrderSummary, resetOrder`).
+    - `Input Validation Refinement`: Implementing `getYesOrNoInput` and `getValidatedInput` for more robust input validation.
+    - `Encapsulation of Scanner Usage`: Managing the Scanner instance more effectively, including its closure.
+
+  - The Reasons
+
+    - `Method Extraction and Refinement`: Each method now handles a specific part of the user interaction, making the code easier to understand and modify.
+    - `Input Validation Refinement`: The new validation methods ensure that only appropriate inputs are accepted (`'Y' or 'N', valid integers`), preventing potential user errors and improving the robustness of the application.
+    - `Encapsulation of Scanner Usage`: Prevents potential resource leaks and ensures that the scanner is closed correctly.
+
+  - The Chagnes
+
+    - Before refactor:
+
+      ```
+      public class UserInterface {
+         private List<Beverage> beverages;
+         private List<Condiment> sugar;
+         private List<Condiment> milk;
+         private Scanner scanner;
+         private Double total;
+
+         private Beverage selectedBeverage;
+         private List<CondimentSelection> selectedSugar = new ArrayList<>();
+         private List<CondimentSelection> selectedMilk = new ArrayList<>();
+
+         public UserInterface(List<Beverage> beverages, List<Condiment> sugar, List<Condiment> milk) {
+            // Implementation
+         }
+
+         public void start() throws InterruptedException {
+            // Implementation
+         }
+
+         private String getUserChoice(String message) {
+            // Implementation
+         }
+
+         private void handleCondimentOptions(List<Condiment> condiments, String condimentType,
+            // Implementation
+         }
+
+         private static class CondimentSelection {
+            // Implementation
+         }
+      }
+      ```
+
+    - After refactor:
+
+      ```
+      public class UserInterface {
+         private List<Beverage> beverages;
+         private List<Condiment> sugar;
+         private List<Condiment> milk;
+         private Scanner scanner;
+         private double total;
+
+         private Beverage selectedBeverage;
+         private List<CondimentSelection> selectedSugar = new ArrayList<>();
+         private List<CondimentSelection> selectedMilk = new ArrayList<>();
+
+         public UserInterface(List<Beverage> beverages, List<Condiment> sugar, List<Condiment> milk) {
+            // Implementation
+         }
+
+         public void start() {
+               try {
+                  do {
+                     displayBeverageOptions();
+                     selectBeverage();
+                     if (askForCondiments("sugar")) {
+                           selectCondiments(sugar, selectedSugar);
+                     }
+                     if (askForCondiments("milk")) {
+                           selectCondiments(milk, selectedMilk);
+                     }
+                     displayOrderSummary();
+                     resetOrder();
+                  } while (askToContinue());
+               } finally {
+                  scanner.close();
+               }
+         }
+
+         private void displayBeverageOptions() {
+            // Implementation
+         }
+
+         private void selectBeverage() {
+            // Implementation
+         }
+
+         private boolean askForCondiments(String type) {
+            // Implementation
+         }
+
+         private void selectCondiments(List<Condiment> condiments, List<CondimentSelection> selections) {
+            // Implementation
+         }
+
+         private void displayCondimentOptions(List<Condiment> condiments) {
+            // Implementation
+         }
+
+         private int getValidatedInput(String prompt, int max) {
+            // Implementation
+         }
+
+         private void displayOrderSummary() {
+            // Implementation
+         }
+
+         private void displayCondimentSummary(String type, List<CondimentSelection> selections) {
+            // Implementation
+         }
+
+         private void resetOrder() {
+            // Implementation
+         }
+
+         private boolean askToContinue() {
+            // Implementation
+         }
+
+         private String getYesOrNoInput(String message) {
+            // Implementation
+         }
+
+         private static class CondimentSelection {
+            // Implementation
+         }
+      }
+      ```
+
+- `FileLoader.java`
+
+  - The Specific Opportunities
+
+    - `Method Extraction and Generalization`: Implementing a `generic loadItems method and specific createBeverage and createCondiment methods`.
+    - `Functional Interface Usage`: Utilizing a functional `interface ItemCreator<T>` for item creation.
+    - `Use of NIO for File Reading`: Switching to NIO (New I/O) for more efficient and flexible file reading.
+
+  - The Reasons
+
+    - `Method Extraction and Generalization`: The generic method `loadItems ` reduces code duplication and increases code clarity by handling the common task of file reading and item creation.
+    - `Functional Interface Usage`: `ItemCreator<T>` provides flexibility in handling different types of objects and encapsulates the creation logic, making the code more modular.
+    - `Use of NIO for File Reading`: Java NIO offers improved performance and flexibility over traditional I/O methods, enhances the code's overall efficiency.
+
+  - The Chagnes
+
+    - Before refactor:
+
+      ```
+       public class FileLoader {
+         public String line = "";
+         public String splitBy = ",";
+
+         public List<Beverage> loadBeverageFile(String fileName) {
+               // Implementation
+         }
+
+         public List<Condiment> loadCondimentFile(String fileName) {
+               // Implementation
+         }
+      }
+      ```
+
+    - After refactor:
+
+      ```
+      public class FileLoader {
+         private static final String SPLIT_BY = ",";
+
+         public List<Beverage> loadBeverageFile(String fileName) throws InvalidDataException {
+            return loadItems(fileName, this::createBeverage);
+         }
+
+         public List<Condiment> loadCondimentFile(String fileName) throws InvalidDataException {
+            return loadItems(fileName, this::createCondiment);
+         }
+
+         private <T> List<T> loadItems(String fileName, ItemCreator<T> creator) throws InvalidDataException {
+            // Implementation
+         }
+
+         private Beverage createBeverage(String line) {
+            // Implementation
+         }
+
+         private Condiment createCondiment(String line) {
+            // Implementation
+         }
+
+         @FunctionalInterface
+         private interface ItemCreator<T> {
+            T create(String line) throws InvalidDataException;
+         }
+      }
+      ```
 
 ---
 
-### `Answer`
+## Design patterns
 
-1. `Flexibility`
-   - `Generic Objects`: Beverage and Condiment objects are designed to be versatile. Adding new types of beverages or condiments is as easy as creating new instances of these objects or updating CSV files.
-   - `CSV Data Storage`: Using CSV files for data storage makes it simple to add, modify, or remove beverages and condiments without changing the core code.
-2. `Simplicity & Understandability`
-   - The main interaction point, the UserInterface, lead the user through the system, just like the logical flow that expect from an actual vending machine.
-3. `Avoidance of Duplicated Code`
-   - By separating classes for different functionalities. For instance, FileLoader takes care of all file-loading operations, ensuring that there's no repetition of file reading logic.
-   - The use of generic classes like Beverage and Condiment prevents the need to create separate classes for each type of beverage or condiment, minimizing redundancy.
-   - Avoiding duplicated code is essential for maintaining the application efficiently. When changes or bug fixes are required, you'll only have to make them in one place, reducing the risk of errors and inconsistencies.
-4. `Design patterns`
-   - `Factory Pattern`: The FileLoader class abstracts away the details of object creation from CSV files, providing an easy and consistent way to generate data objects. [This is to deal with the problem of creating objects without having to specify the exact class of the object that will be created.](https://en.wikipedia.org/wiki/Factory_method_pattern)
+- `Design patterns`:
+  - `Factory Pattern`: The FileLoader class abstracts away the details of object creation from CSV files, providing an easy and consistent way to generate data objects. [This is to deal with the problem of creating objects without having to specify the exact class of the object that will be created.](https://en.wikipedia.org/wiki/Factory_method_pattern)
 
 ## UML Diagram
 
-![UML Diagram](UML.svg)
+![UML Diagram](UML.png)
 
 # Maven Commands
 

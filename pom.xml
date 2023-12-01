@@ -83,6 +83,12 @@
                 <version>3.0.0</version>
             </extension>
         </extensions>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.spotbugs</groupId>

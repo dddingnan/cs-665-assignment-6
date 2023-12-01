@@ -1,6 +1,10 @@
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.condiment;
 
 import org.junit.Test;
+
+import edu.bu.met.cs665.beverage.Beverage;
+import edu.bu.met.cs665.exception.InvalidDataException;
+
 import static org.junit.Assert.*;
 
 public class CondimentTest {

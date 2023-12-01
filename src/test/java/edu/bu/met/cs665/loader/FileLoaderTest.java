@@ -1,7 +1,12 @@
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.loader;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.bu.met.cs665.beverage.Beverage;
+import edu.bu.met.cs665.condiment.Condiment;
+import edu.bu.met.cs665.exception.InvalidDataException;
+
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;

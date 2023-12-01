@@ -1,9 +1,13 @@
-package edu.bu.met.cs665;
+package edu.bu.met.cs665.user;
 
 import java.util.List;
 import java.util.Scanner;
 import java.lang.reflect.Field;
 import org.junit.*;
+
+import edu.bu.met.cs665.beverage.Beverage;
+import edu.bu.met.cs665.condiment.Condiment;
+import edu.bu.met.cs665.exception.InvalidDataException;
 
 import static org.junit.Assert.*;
 
