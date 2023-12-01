@@ -13,7 +13,8 @@ For this time assignment, address at least 3 areas of code improvement.
 
 # GitHub Repository Link:
 
-- https://github.com/dddingnan/cs-665-assignment-6
+- Assignment-6 URL:
+  - https://github.com/dddingnan/cs-665-assignment-6
 - Refactor based on the assignment-1 URL:
   - https://github.com/dddingnan/cs-665-assignment-1
 
@@ -41,20 +42,19 @@ For this time assignment, address at least 3 areas of code improvement.
 
       ```
       public class Main {
-
-      public static void main(String[] args) throws InvalidDataException, InterruptedException {
-         System.out.println("Hello! Welcome to the Automatic Beverage Vending Machine System!");
-         System.out.println("--------------------------------------------------------");
-         List<Beverage> beverages = new ArrayList<>();
-         List<Condiment> sugar = new ArrayList<>();
-         List<Condiment> milk = new ArrayList<>();
-         FileLoader loader = new FileLoader();
-         beverages = loader.loadBeverageFile("src/data/beverage.csv");
-         sugar = loader.loadCondimentFile("src/data/sugar.csv");
-         milk = loader.loadCondimentFile("src/data/milk.csv");
-         UserInterface ui = new UserInterface(beverages, sugar, milk);
-         ui.start();
-      }
+         public static void main(String[] args) throws InvalidDataException, InterruptedException {
+            System.out.println("Hello! Welcome to the Automatic Beverage Vending Machine System!");
+            System.out.println("--------------------------------------------------------");
+            List<Beverage> beverages = new ArrayList<>();
+            List<Condiment> sugar = new ArrayList<>();
+            List<Condiment> milk = new ArrayList<>();
+            FileLoader loader = new FileLoader();
+            beverages = loader.loadBeverageFile("src/data/beverage.csv");
+            sugar = loader.loadCondimentFile("src/data/sugar.csv");
+            milk = loader.loadCondimentFile("src/data/milk.csv");
+            UserInterface ui = new UserInterface(beverages, sugar, milk);
+            ui.start();
+         }
       }
       ```
 
@@ -62,41 +62,40 @@ For this time assignment, address at least 3 areas of code improvement.
 
       ```
       public class Main {
+         private static final String BEVERAGE_FILE_PATH = "src/main/resources/data/beverage.csv";
+         private static final String SUGAR_FILE_PATH = "src/main/resources/data/sugar.csv";
+         private static final String MILK_FILE_PATH = "src/main/resources/data/milk.csv";
 
-      private static final String BEVERAGE_FILE_PATH = "src/main/resources/data/beverage.csv";
-      private static final String SUGAR_FILE_PATH = "src/main/resources/data/sugar.csv";
-      private static final String MILK_FILE_PATH = "src/main/resources/data/milk.csv";
-
-      public static void main(String[] args) {
-         try {
-            System.out.println("Initializing the Vending Machine...");
-            startVendingMachine();
-         } catch (Exception e) {
-            System.err.println("Error initializing the Vending Machine: " + e.getMessage());
-            e.printStackTrace();
+         public static void main(String[] args) {
+            try {
+               System.out.println("Initializing the Vending Machine...");
+               startVendingMachine();
+            } catch (Exception e) {
+               System.err.println("Error initializing the Vending Machine: " + e.getMessage());
+               e.printStackTrace();
+            }
          }
-      }
 
-      private static void startVendingMachine() throws InterruptedException, InvalidDataException {
-         FileLoader loader = new FileLoader();
+         private static void startVendingMachine() throws InterruptedException, InvalidDataException {
+            FileLoader loader = new FileLoader();
 
-         List<Beverage> beverages = loadBeverages(loader);
-         List<Condiment> sugars = loadCondiments(loader, SUGAR_FILE_PATH);
-         List<Condiment> milks = loadCondiments(loader, MILK_FILE_PATH);
+            List<Beverage> beverages = loadBeverages(loader);
+            List<Condiment> sugars = loadCondiments(loader, SUGAR_FILE_PATH);
+            List<Condiment> milks = loadCondiments(loader, MILK_FILE_PATH);
 
-         UserInterface ui = new UserInterface(beverages, sugars, milks);
-         ui.start();
-      }
+            UserInterface ui = new UserInterface(beverages, sugars, milks);
+            ui.start();
+         }
 
-      private static List<Beverage> loadBeverages(FileLoader loader) throws InvalidDataException {
-         System.out.println("Loading beverages...");
-         return loader.loadBeverageFile(BEVERAGE_FILE_PATH);
-      }
+         private static List<Beverage> loadBeverages(FileLoader loader) throws InvalidDataException {
+            System.out.println("Loading beverages...");
+            return loader.loadBeverageFile(BEVERAGE_FILE_PATH);
+         }
 
-      private static List<Condiment> loadCondiments(FileLoader loader, String filePath) throws InvalidDataException {
-         System.out.println("Loading condiments from " + filePath + "...");
-         return loader.loadCondimentFile(filePath);
-      }
+         private static List<Condiment> loadCondiments(FileLoader loader, String filePath) throws InvalidDataException {
+            System.out.println("Loading condiments from " + filePath + "...");
+            return loader.loadCondimentFile(filePath);
+         }
       }
       ```
 
@@ -185,63 +184,50 @@ For this time assignment, address at least 3 areas of code improvement.
     - Before refactor:
 
       ```
-      public class Main {
+       public class FileLoader {
+         public String line = "";
+         public String splitBy = ",";
 
-      public static void main(String[] args) throws InvalidDataException, InterruptedException {
-         System.out.println("Hello! Welcome to the Automatic Beverage Vending Machine System!");
-         System.out.println("--------------------------------------------------------");
-         List<Beverage> beverages = new ArrayList<>();
-         List<Condiment> sugar = new ArrayList<>();
-         List<Condiment> milk = new ArrayList<>();
-         FileLoader loader = new FileLoader();
-         beverages = loader.loadBeverageFile("src/data/beverage.csv");
-         sugar = loader.loadCondimentFile("src/data/sugar.csv");
-         milk = loader.loadCondimentFile("src/data/milk.csv");
-         UserInterface ui = new UserInterface(beverages, sugar, milk);
-         ui.start();
-      }
+         public List<Beverage> loadBeverageFile(String fileName) {
+               // Implementation
+         }
+
+         public List<Condiment> loadCondimentFile(String fileName) {
+               // Implementation
+         }
       }
       ```
 
     - After refactor:
 
       ```
-      public class Main {
+      public class FileLoader {
+         private static final String SPLIT_BY = ",";
 
-      private static final String BEVERAGE_FILE_PATH = "src/main/resources/data/beverage.csv";
-      private static final String SUGAR_FILE_PATH = "src/main/resources/data/sugar.csv";
-      private static final String MILK_FILE_PATH = "src/main/resources/data/milk.csv";
-
-      public static void main(String[] args) {
-         try {
-            System.out.println("Initializing the Vending Machine...");
-            startVendingMachine();
-         } catch (Exception e) {
-            System.err.println("Error initializing the Vending Machine: " + e.getMessage());
-            e.printStackTrace();
+         public List<Beverage> loadBeverageFile(String fileName) throws InvalidDataException {
+            return loadItems(fileName, this::createBeverage);
          }
-      }
 
-      private static void startVendingMachine() throws InterruptedException, InvalidDataException {
-         FileLoader loader = new FileLoader();
+         public List<Condiment> loadCondimentFile(String fileName) throws InvalidDataException {
+            return loadItems(fileName, this::createCondiment);
+         }
 
-         List<Beverage> beverages = loadBeverages(loader);
-         List<Condiment> sugars = loadCondiments(loader, SUGAR_FILE_PATH);
-         List<Condiment> milks = loadCondiments(loader, MILK_FILE_PATH);
+         private <T> List<T> loadItems(String fileName, ItemCreator<T> creator) throws InvalidDataException {
+            // Implementation
+         }
 
-         UserInterface ui = new UserInterface(beverages, sugars, milks);
-         ui.start();
-      }
+         private Beverage createBeverage(String line) {
+            // Implementation
+         }
 
-      private static List<Beverage> loadBeverages(FileLoader loader) throws InvalidDataException {
-         System.out.println("Loading beverages...");
-         return loader.loadBeverageFile(BEVERAGE_FILE_PATH);
-      }
+         private Condiment createCondiment(String line) {
+            // Implementation
+         }
 
-      private static List<Condiment> loadCondiments(FileLoader loader, String filePath) throws InvalidDataException {
-         System.out.println("Loading condiments from " + filePath + "...");
-         return loader.loadCondimentFile(filePath);
-      }
+         @FunctionalInterface
+         private interface ItemCreator<T> {
+            T create(String line) throws InvalidDataException;
+         }
       }
       ```
 
