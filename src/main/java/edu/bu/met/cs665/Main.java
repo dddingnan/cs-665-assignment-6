@@ -10,37 +10,50 @@
 
 package edu.bu.met.cs665;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.bu.met.cs665.beverage.Beverage;
 import edu.bu.met.cs665.condiment.Condiment;
-import edu.bu.met.cs665.exception.InvalidDataException;
 import edu.bu.met.cs665.loader.FileLoader;
 import edu.bu.met.cs665.user.UserInterface;
 
-/**
- * This is the Main class.
- */
 public class Main {
 
+  private static final String BEVERAGE_FILE_PATH = "src/main/resources/data/beverage.csv";
+  private static final String SUGAR_FILE_PATH = "src/main/resources/data/sugar.csv";
+  private static final String MILK_FILE_PATH = "src/main/resources/data/milk.csv";
+
   /**
-   * Entry point method for the application. This method initializes the system by
-   * loading
-   * beverage and condiment data from CSV files and then starts the user interface
-   * for interaction.
+   * Entry point method for the application.
    */
-  public static void main(String[] args) throws InvalidDataException, InterruptedException {
-    System.out.println("Hello! Welcome to the Automatic Beverage Vending Machine System!");
-    System.out.println("--------------------------------------------------------");
-    List<Beverage> beverages = new ArrayList<>();
-    List<Condiment> sugar = new ArrayList<>();
-    List<Condiment> milk = new ArrayList<>();
+  public static void main(String[] args) {
+    try {
+      System.out.println("Initializing the Vending Machine...");
+      startVendingMachine();
+    } catch (Exception e) {
+      System.err.println("Error initializing the Vending Machine: " + e.getMessage());
+      e.printStackTrace();
+    }
+  }
+
+  private static void startVendingMachine() throws InterruptedException {
     FileLoader loader = new FileLoader();
-    beverages = loader.loadBeverageFile("src/main/resources/data/beverage.csv");
-    sugar = loader.loadCondimentFile("src/main/resources/data/sugar.csv");
-    milk = loader.loadCondimentFile("src/main/resources/data/milk.csv");
-    UserInterface ui = new UserInterface(beverages, sugar, milk);
+
+    List<Beverage> beverages = loadBeverages(loader);
+    List<Condiment> sugars = loadCondiments(loader, SUGAR_FILE_PATH);
+    List<Condiment> milks = loadCondiments(loader, MILK_FILE_PATH);
+
+    UserInterface ui = new UserInterface(beverages, sugars, milks);
     ui.start();
+  }
+
+  private static List<Beverage> loadBeverages(FileLoader loader) {
+    System.out.println("Loading beverages...");
+    return loader.loadBeverageFile(BEVERAGE_FILE_PATH);
+  }
+
+  private static List<Condiment> loadCondiments(FileLoader loader, String filePath) {
+    System.out.println("Loading condiments from " + filePath + "...");
+    return loader.loadCondimentFile(filePath);
   }
 }

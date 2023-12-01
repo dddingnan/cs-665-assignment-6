@@ -25,7 +25,23 @@ For each assignment, please answer the following:
 - If applicable, mention any design patterns you have used and explain why they were
   chosen.
 
----
+### Task
+
+Refactoring the Main class could involve several steps to improve clarity, maintainability, and potentially performance. Here are some steps:
+
+Extract Method: The main method does a lot. You could extract methods to handle specific parts of the initialization process. For example, loading beverages and condiments could be extracted into their own methods.
+
+Use Meaningful Variable Names: The names sugar and milk for lists of condiments could be more descriptive. They should reflect that they are collections of items, like sugars and milks, or even more descriptively, sugarOptions and milkOptions.
+
+Handle Exceptions More Gracefully: Instead of throwing InvalidDataException from the main method, you could catch it and display an error message, possibly instructing the user on how to rectify the issue.
+
+Remove Redundant Initialization: The lists are initialized twice: once with new ArrayList<>() and again with the results from loader. The initial empty list creation is unnecessary.
+
+Improve Resource Management: Ensure that any resources (like file streams opened in FileLoader) are properly closed, potentially using try-with-resources statements.
+
+Separate Concerns: Main is doing a bit of everything - consider whether some responsibilities could be moved to other classes to adhere to the Single Responsibility Principle.
+
+Improve User Feedback: When starting up, the system could give more feedback about what's happening, such as "Loading beverages...", "Loading condiments...", etc.
 
 ### `Answer`
 
