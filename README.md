@@ -118,16 +118,35 @@ For this time assignment, address at least 3 areas of code improvement.
     - Before refactor:
 
       ```
-       public class FileLoader {
-         public String line = "";
-         public String splitBy = ",";
+      public class UserInterface {
+         private List<Beverage> beverages;
+         private List<Condiment> sugar;
+         private List<Condiment> milk;
+         private Scanner scanner;
+         private Double total;
 
-         public List<Beverage> loadBeverageFile(String fileName) {
-               // Implementation
+         private Beverage selectedBeverage;
+         private List<CondimentSelection> selectedSugar = new ArrayList<>();
+         private List<CondimentSelection> selectedMilk = new ArrayList<>();
+
+         public UserInterface(List<Beverage> beverages, List<Condiment> sugar, List<Condiment> milk) {
+            // Implementation
          }
 
-         public List<Condiment> loadCondimentFile(String fileName) {
-               // Implementation
+         public void start() throws InterruptedException {
+            // Implementation
+         }
+
+         private String getUserChoice(String message) {
+            // Implementation
+         }
+
+         private void handleCondimentOptions(List<Condiment> condiments, String condimentType,
+            // Implementation
+         }
+
+         private static class CondimentSelection {
+            // Implementation
          }
       }
       ```
@@ -135,32 +154,86 @@ For this time assignment, address at least 3 areas of code improvement.
     - After refactor:
 
       ```
-      public class FileLoader {
-         private static final String SPLIT_BY = ",";
+      public class UserInterface {
+         private List<Beverage> beverages;
+         private List<Condiment> sugar;
+         private List<Condiment> milk;
+         private Scanner scanner;
+         private double total;
 
-         public List<Beverage> loadBeverageFile(String fileName) throws InvalidDataException {
-            return loadItems(fileName, this::createBeverage);
-         }
+         private Beverage selectedBeverage;
+         private List<CondimentSelection> selectedSugar = new ArrayList<>();
+         private List<CondimentSelection> selectedMilk = new ArrayList<>();
 
-         public List<Condiment> loadCondimentFile(String fileName) throws InvalidDataException {
-            return loadItems(fileName, this::createCondiment);
-         }
-
-         private <T> List<T> loadItems(String fileName, ItemCreator<T> creator) throws InvalidDataException {
+         public UserInterface(List<Beverage> beverages, List<Condiment> sugar, List<Condiment> milk) {
             // Implementation
          }
 
-         private Beverage createBeverage(String line) {
+         public void start() {
+               try {
+                  do {
+                     displayBeverageOptions();
+                     selectBeverage();
+                     if (askForCondiments("sugar")) {
+                           selectCondiments(sugar, selectedSugar);
+                     }
+                     if (askForCondiments("milk")) {
+                           selectCondiments(milk, selectedMilk);
+                     }
+                     displayOrderSummary();
+                     resetOrder();
+                  } while (askToContinue());
+               } finally {
+                  scanner.close();
+               }
+         }
+
+         private void displayBeverageOptions() {
             // Implementation
          }
 
-         private Condiment createCondiment(String line) {
+         private void selectBeverage() {
             // Implementation
          }
 
-         @FunctionalInterface
-         private interface ItemCreator<T> {
-            T create(String line) throws InvalidDataException;
+         private boolean askForCondiments(String type) {
+            // Implementation
+         }
+
+         private void selectCondiments(List<Condiment> condiments, List<CondimentSelection> selections) {
+            // Implementation
+         }
+
+         private void displayCondimentOptions(List<Condiment> condiments) {
+            // Implementation
+         }
+
+         private int getValidatedInput(String prompt, int max) {
+            // Implementation
+         }
+
+         private void displayOrderSummary() {
+            // Implementation
+         }
+
+         private void displayCondimentSummary(String type, List<CondimentSelection> selections) {
+            // Implementation
+         }
+
+         private void resetOrder() {
+            // Implementation
+         }
+
+         private boolean askToContinue() {
+            // Implementation
+         }
+
+         private String getYesOrNoInput(String message) {
+            // Implementation
+         }
+
+         private static class CondimentSelection {
+            // Implementation
          }
       }
       ```
