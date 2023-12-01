@@ -27,7 +27,9 @@ For each assignment, please answer the following:
 
 ### Task
 
-Refactoring the Main class could involve several steps to improve clarity, maintainability, and potentially performance. Here are some steps:
+---
+
+- 1.  Refactoring the Main class could involve several steps to improve clarity, maintainability, and potentially performance. Here are some steps:
 
 Extract Method: The main method does a lot. You could extract methods to handle specific parts of the initialization process. For example, loading beverages and condiments could be extracted into their own methods.
 
@@ -42,6 +44,28 @@ Improve Resource Management: Ensure that any resources (like file streams opened
 Separate Concerns: Main is doing a bit of everything - consider whether some responsibilities could be moved to other classes to adhere to the Single Responsibility Principle.
 
 Improve User Feedback: When starting up, the system could give more feedback about what's happening, such as "Loading beverages...", "Loading condiments...", etc.
+
+---
+
+- 2.
+
+Refactoring the FileLoader class can improve its clarity, robustness, and maintainability. Here are some suggestions for refactoring this class:
+
+Use Constants for Fixed Values: The line and splitBy variables seem to be constants, but they're not declared as such. You should declare them as private static final.
+
+Remove Public Modifiers from Internal Variables: The line and splitBy variables should be private if they're not intended for use outside the class.
+
+Use Try-With-Resources for Better Resource Management: You're already doing this, which is good practice for managing resources like file streams.
+
+Extract Common Code: The code for reading from the CSV file and splitting lines is repeated in both loadBeverageFile and loadCondimentFile. This could be refactored into a common method.
+
+Centralize Error Handling: The error handling could be refactored to reduce redundancy and possibly to centralize logging or error reporting.
+
+Improve Feedback Mechanism: Rather than printing to the console, consider using a logging framework or throwing exceptions that can be logged/handled by the caller.
+
+Enhance File Path Handling: Use Path and Files.newBufferedReader instead of FileReader for better path handling and charset management.
+
+---
 
 ### `Answer`
 

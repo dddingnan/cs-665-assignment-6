@@ -14,6 +14,7 @@ import java.util.List;
 
 import edu.bu.met.cs665.beverage.Beverage;
 import edu.bu.met.cs665.condiment.Condiment;
+import edu.bu.met.cs665.exception.InvalidDataException;
 import edu.bu.met.cs665.loader.FileLoader;
 import edu.bu.met.cs665.user.UserInterface;
 
@@ -36,7 +37,7 @@ public class Main {
     }
   }
 
-  private static void startVendingMachine() throws InterruptedException {
+  private static void startVendingMachine() throws InterruptedException, InvalidDataException {
     FileLoader loader = new FileLoader();
 
     List<Beverage> beverages = loadBeverages(loader);
@@ -47,12 +48,12 @@ public class Main {
     ui.start();
   }
 
-  private static List<Beverage> loadBeverages(FileLoader loader) {
+  private static List<Beverage> loadBeverages(FileLoader loader) throws InvalidDataException {
     System.out.println("Loading beverages...");
     return loader.loadBeverageFile(BEVERAGE_FILE_PATH);
   }
 
-  private static List<Condiment> loadCondiments(FileLoader loader, String filePath) {
+  private static List<Condiment> loadCondiments(FileLoader loader, String filePath) throws InvalidDataException {
     System.out.println("Loading condiments from " + filePath + "...");
     return loader.loadCondimentFile(filePath);
   }
