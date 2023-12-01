@@ -93,8 +93,8 @@ public class UserInterface {
      * @return True if the user wants to add the condiment, false otherwise.
      */
     private boolean askForCondiments(String type) {
-        System.out.print("Do you want to add " + type + "? (Y/N): ");
-        return scanner.next().equalsIgnoreCase("Y");
+        String response = getYesOrNoInput("Do you want to add " + type + "? (Y/N): ");
+        return response.equalsIgnoreCase("Y");
     }
 
     /**
@@ -194,8 +194,27 @@ public class UserInterface {
      * @return True if the user wants to continue, false if they want to exit.
      */
     private boolean askToContinue() {
-        System.out.print("Do you want to make another order? (Y/N): ");
-        return scanner.next().equalsIgnoreCase("Y");
+        String response = getYesOrNoInput("Do you want to make another order? (Y/N): ");
+        return response.equalsIgnoreCase("Y");
+    }
+
+    /**
+     * Prompts the user with the given message and validates the input to be 'Y' or
+     * 'N'.
+     * 
+     * @param message The message to prompt the user with.
+     * @return The validated input, guaranteed to be 'Y' or 'N'.
+     */
+    private String getYesOrNoInput(String message) {
+        String input;
+        do {
+            System.out.print(message);
+            input = scanner.next();
+            if (!input.equalsIgnoreCase("Y") && !input.equalsIgnoreCase("N")) {
+                System.out.println("Invalid input. Please enter 'Y' or 'N'.");
+            }
+        } while (!input.equalsIgnoreCase("Y") && !input.equalsIgnoreCase("N"));
+        return input;
     }
 
     /**
